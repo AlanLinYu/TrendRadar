@@ -1,0 +1,46 @@
+ name: Hot News Crawler
+    
+     on:
+       schedule:
+         # 每30分钟执行一次（可根据需要调整）
+         - cron: '*/30 * * * *'
+       workflow_dispatch: # 允许手动触发
+    
+     jobs:
+      crawl:
+        runs-on: ubuntu-latest
+   
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+   
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.11'
+   
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+   
+        - name: Run TrendRadar crawler
+          run: python main.py
+          env:
+            WEWORK_WEBHOOK_URL: ${{ secrets.WEWORK_WEBHOOK_URL }}
+            FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
+            DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
+            TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+            TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+            EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+            EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+            EMAIL_TO: ${{ secrets.EMAIL_TO }}
+            EMAIL_SMTP_SERVER: ${{ secrets.EMAIL_SMTP_SERVER }}
+            EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
+            NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+            NTFY_SERVER_URL: ${{ secrets.NTFY_SERVER_URL }}
+            NTFY_TOKEN: ${{ secrets.NTFY_TOKEN }}
+            BARK_URL: ${{ secrets.BARK_URL }}
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            SORT_BY_POSITION_FIRST: ${{ vars.SORT_BY_POSITION_FIRST }}
+            MAX_NEWS_PER_KEYWORD: ${{ vars.MAX_NEWS_PER_KEYWORD }}
